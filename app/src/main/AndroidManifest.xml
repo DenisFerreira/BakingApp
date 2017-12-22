@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.android.bakingapp">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -15,6 +17,31 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <provider
+            android:name=".RecipeProvider"
+            android:authorities="com.example.android.bakingapp"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".RecipeItemListActivity"
+            android:label="@string/title_recipeitem_list"
+            android:parentActivityName=".RecipeList"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.bakingapp.RecipeList" />
+        </activity>
+        <activity
+            android:name=".RecipeItemDetailActivity"
+            android:label="@string/title_recipeitem_detail"
+            android:parentActivityName=".RecipeItemListActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.android.bakingapp.RecipeItemListActivity" />
         </activity>
     </application>
 

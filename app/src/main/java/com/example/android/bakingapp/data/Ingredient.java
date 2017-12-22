@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 
 public class Ingredient implements Parcelable
 {
