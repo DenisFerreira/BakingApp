@@ -1,4 +1,4 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.RecipeItemListActivity;
 import com.example.android.bakingapp.data.Recipe;
 import com.squareup.picasso.Picasso;
 
@@ -21,7 +23,7 @@ import butterknife.ButterKnife;
  * Created by lsitec205.ferreira on 22/12/17.
  */
 
-class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.GridViewHolder>{
+public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.GridViewHolder>{
     private Context mContext;
     private List<Recipe> mRecipes;
 

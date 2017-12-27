@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import com.example.android.bakingapp.adapters.SimpleItemRecyclerViewAdapter;
 import com.example.android.bakingapp.data.Recipe;
 import com.example.android.bakingapp.data.Step;
 
@@ -47,15 +49,16 @@ public class RecipeItemListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipeitem_list);
-
-        if(savedInstanceState != null) {
-            mRecipe = savedInstanceState.getParcelable("recipe");
+        ButterKnife.bind(this);
+        Intent intent = getIntent();
+        if(intent.hasExtra("recipe") ) {
+            mRecipe = intent.getParcelableExtra("recipe");
             if(mRecipe == null)
                 return;
 
             Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);
-            toolbar.setTitle(getTitle());
+            toolbar.setTitle(mRecipe.getName());
 
             FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
             fab.setOnClickListener(new View.OnClickListener() {
@@ -103,102 +106,9 @@ public class RecipeItemListActivity extends AppCompatActivity {
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, mRecipe, mTwoPane));
-    }
-
-    public static class SimpleItemRecyclerViewAdapter
-            extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
-
-        private final RecipeItemListActivity mParentActivity;
-        private final Recipe mRecipe;
-        private final boolean mTwoPane;
-
-
-        SimpleItemRecyclerViewAdapter(RecipeItemListActivity parent,
-                                      Recipe recipe,
-                                      boolean twoPane) {
-            mRecipe = recipe;
-            mParentActivity = parent;
-            mTwoPane = twoPane;
-        }
-
-        @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.recipeitem_list_content, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(final ViewHolder holder, final int position) {
-            if(position == 0) {
-                holder.mContentView.setText(R.string.recipe_ingredients);
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        if (mTwoPane) {
-                            Bundle arguments = new Bundle();
-                            arguments.putParcelable("recipe", mRecipe);
-                            RecipeInfoDetailFragment fragment = new RecipeInfoDetailFragment();
-                            fragment.setArguments(arguments);
-                            mParentActivity.getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.recipeitem_detail_container, fragment)
-                                    .commit();
-                        } else {
-                            Context context = view.getContext();
-                            Intent intent = new Intent(context, RecipeInfoDetailActivity.class);
-
-
-                            context.startActivity(intent);
-                        }
-                    }
-                });
-            }
-            else {
-                final Step step = mRecipe.getSteps().get(position - 1);
-                holder.mIdView.setText(step.getId());
-                holder.mContentView.setText(step.getShortDescription());
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                    if (mTwoPane) {
-                        Bundle arguments = new Bundle();
-                        arguments.putInt(RecipeItemDetailFragment.ARG_ITEM_ID, position - 1);
-                        arguments.putParcelable("recipe", mRecipe);
-                        RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
-                        fragment.setArguments(arguments);
-                        mParentActivity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.recipeitem_detail_container, fragment)
-                                .commit();
-                    } else {
-                        Context context = view.getContext();
-                        Intent intent = new Intent(context, RecipeItemDetailActivity.class);
-                        intent.putExtra(RecipeItemDetailFragment.ARG_ITEM_ID, position - 1);
-                        intent.putExtra("recipe", mRecipe);
-                        context.startActivity(intent);
-                    }
-                    }
-                });
-            }
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return 0;
-        }
-
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            @BindView(R.id.id_text) TextView mIdView;
-            @BindView(R.id.content) TextView mContentView;
-
-            ViewHolder(View view) {
-                super(view);
-                ButterKnife.bind(this, view);
-            }
-        }
     }
 }

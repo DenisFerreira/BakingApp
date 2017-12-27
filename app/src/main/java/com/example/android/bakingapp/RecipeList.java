@@ -10,6 +10,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.android.bakingapp.adapters.RecipeAdapter;
 import com.example.android.bakingapp.data.Recipe;
 import com.example.android.bakingapp.utils.RecipeLoader;
 import java.util.List;
