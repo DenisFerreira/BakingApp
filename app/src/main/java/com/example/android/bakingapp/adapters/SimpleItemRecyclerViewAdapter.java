@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.RecipeInfoDetailActivity;
-import com.example.android.bakingapp.RecipeInfoDetailFragment;
 import com.example.android.bakingapp.RecipeItemDetailActivity;
 import com.example.android.bakingapp.RecipeItemDetailFragment;
 import com.example.android.bakingapp.RecipeItemListActivity;
@@ -54,56 +52,36 @@ public class SimpleItemRecyclerViewAdapter
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        if(position == 0) {
+        if(position == 0)
             holder.mContentView.setText(R.string.recipe_ingredients);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (mTwoPane) {
-                        RecipeInfoDetailFragment fragment = new RecipeInfoDetailFragment();
-                        Bundle arguments = new Bundle();
-                        arguments.putParcelable("recipe", mRecipe);
-                        fragment.setArguments(arguments);
-                        mParentActivity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.recipeitem_detail_container, fragment)
-                                .commit();
-                    } else {
-                        Context context = view.getContext();
-                        Intent intent = new Intent(context, RecipeInfoDetailActivity.class);
-                        intent.putExtra("recipe", mRecipe);
-                        context.startActivity(intent);
-                    }
-                }
-            });
-        }
         else {
             if(mStepsIterator.hasNext()) {
                 final Step step = mStepsIterator.next();
                 holder.mIdView.setText(step.getId().toString());
                 holder.mContentView.setText(step.getShortDescription());
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if (mTwoPane) {
-                            RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
-                            Bundle arguments = new Bundle();
-                            arguments.putInt(RecipeItemDetailFragment.ARG_ITEM_ID, position - 1);
-                            arguments.putParcelable("recipe", mRecipe);
-                            fragment.setArguments(arguments);
-                            mParentActivity.getSupportFragmentManager().beginTransaction()
-                                    .replace(R.id.recipeitem_detail_container, fragment)
-                                    .commit();
-                        } else {
-                            Context context = view.getContext();
-                            Intent intent = new Intent(context, RecipeItemDetailActivity.class);
-                            intent.putExtra("recipe", mRecipe);
-                            intent.putExtra(RecipeItemDetailFragment.ARG_ITEM_ID, position - 1);
-                            context.startActivity(intent);
-                        }
-                    }
-                });
             }
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mTwoPane) {
+                    RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
+                    Bundle arguments = new Bundle();
+                    arguments.putInt(RecipeItemDetailFragment.ARG_ITEM_ID, position);
+                    arguments.putParcelable("recipe", mRecipe);
+                    fragment.setArguments(arguments);
+                    mParentActivity.getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.recipeitem_detail_container, fragment)
+                            .commit();
+                } else {
+                    Context context = view.getContext();
+                    Intent intent = new Intent(context, RecipeItemDetailActivity.class);
+                    intent.putExtra("recipe", mRecipe);
+                    intent.putExtra(RecipeItemDetailFragment.ARG_ITEM_ID, position);
+                    context.startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override

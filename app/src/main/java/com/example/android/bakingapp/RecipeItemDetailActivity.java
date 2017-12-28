@@ -21,6 +21,7 @@ import com.example.android.bakingapp.data.Recipe;
 public class RecipeItemDetailActivity extends AppCompatActivity {
 
     private Recipe mRecipe;
+    private Integer mItemID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +45,10 @@ public class RecipeItemDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        if (getIntent().hasExtra("recipe"))
+        if (getIntent().hasExtra("recipe")) {
             mRecipe = getIntent().getParcelableExtra("recipe");
+            mItemID = getIntent().getIntExtra(RecipeItemDetailFragment.ARG_ITEM_ID, 0);
+        }
 
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
@@ -60,8 +63,7 @@ public class RecipeItemDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putInt(RecipeItemDetailFragment.ARG_ITEM_ID,
-                    getIntent().getIntExtra(RecipeItemDetailFragment.ARG_ITEM_ID, 0));
+            arguments.putInt(RecipeItemDetailFragment.ARG_ITEM_ID, mItemID);
             arguments.putParcelable("recipe", mRecipe);
             RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
             fragment.setArguments(arguments);

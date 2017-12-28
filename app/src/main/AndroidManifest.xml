@@ -43,15 +43,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.bakingapp.RecipeItemListActivity" />
         </activity>
-        <activity
-            android:name=".RecipeInfoDetailActivity"
-            android:label="@string/title_recipeitem_detail"
-            android:parentActivityName=".RecipeItemListActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.bakingapp.RecipeItemListActivity" />
-        </activity>
     </application>
 
 </manifest>

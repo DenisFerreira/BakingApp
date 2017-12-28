@@ -74,6 +74,7 @@ public class RecipeItemListActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(mRecipe.getName());
         }
 
         if (findViewById(R.id.recipeitem_detail_container) != null) {
