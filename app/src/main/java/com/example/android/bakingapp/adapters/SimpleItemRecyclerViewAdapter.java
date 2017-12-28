@@ -59,11 +59,10 @@ public class SimpleItemRecyclerViewAdapter
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     if (mTwoPane) {
+                        RecipeInfoDetailFragment fragment = new RecipeInfoDetailFragment();
                         Bundle arguments = new Bundle();
                         arguments.putParcelable("recipe", mRecipe);
-                        RecipeInfoDetailFragment fragment = new RecipeInfoDetailFragment();
                         fragment.setArguments(arguments);
                         mParentActivity.getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.recipeitem_detail_container, fragment)
@@ -71,8 +70,7 @@ public class SimpleItemRecyclerViewAdapter
                     } else {
                         Context context = view.getContext();
                         Intent intent = new Intent(context, RecipeInfoDetailActivity.class);
-
-
+                        intent.putExtra("recipe", mRecipe);
                         context.startActivity(intent);
                     }
                 }
@@ -86,12 +84,11 @@ public class SimpleItemRecyclerViewAdapter
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
                         if (mTwoPane) {
+                            RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
                             Bundle arguments = new Bundle();
                             arguments.putInt(RecipeItemDetailFragment.ARG_ITEM_ID, position - 1);
                             arguments.putParcelable("recipe", mRecipe);
-                            RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
                             fragment.setArguments(arguments);
                             mParentActivity.getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.recipeitem_detail_container, fragment)
@@ -99,8 +96,8 @@ public class SimpleItemRecyclerViewAdapter
                         } else {
                             Context context = view.getContext();
                             Intent intent = new Intent(context, RecipeItemDetailActivity.class);
-                            intent.putExtra(RecipeItemDetailFragment.ARG_ITEM_ID, position - 1);
                             intent.putExtra("recipe", mRecipe);
+                            intent.putExtra(RecipeItemDetailFragment.ARG_ITEM_ID, position - 1);
                             context.startActivity(intent);
                         }
                     }

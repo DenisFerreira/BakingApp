@@ -3,6 +3,7 @@ package com.example.android.bakingapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,11 +21,6 @@ import android.view.MenuItem;
 
 import com.example.android.bakingapp.adapters.SimpleItemRecyclerViewAdapter;
 import com.example.android.bakingapp.data.Recipe;
-import com.example.android.bakingapp.data.Step;
-
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static android.support.v4.app.NavUtils.navigateUpFromSameTask;
 
@@ -49,43 +45,61 @@ public class RecipeItemListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipeitem_list);
-        ButterKnife.bind(this);
         Intent intent = getIntent();
-        if(intent.hasExtra("recipe") ) {
-            mRecipe = intent.getParcelableExtra("recipe");
-            if(mRecipe == null)
-                return;
+        try {
+            if (intent.hasExtra("recipe"))
+                mRecipe = intent.getParcelableExtra("recipe");
+            if(savedInstanceState != null)
+                mRecipe = savedInstanceState.getParcelable("recipe");
 
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
-            toolbar.setTitle(mRecipe.getName());
-
-            FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-            fab.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }
-            });
-            // Show the Up button in the action bar.
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
-
-            if (findViewById(R.id.recipeitem_detail_container) != null) {
-                // The detail container view will be present only in the
-                // large-screen layouts (res/values-w900dp).
-                // If this view is present, then the
-                // activity should be in two-pane mode.
-                mTwoPane = true;
-            }
-
-            View recyclerView = findViewById(R.id.recipeitem_list);
-            assert recyclerView != null;
-            setupRecyclerView((RecyclerView) recyclerView);
+            if (mRecipe == null)
+                throw new Exception();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle(mRecipe.getName());
+
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
+        if (findViewById(R.id.recipeitem_detail_container) != null) {
+            // The detail container view will be present only in the
+            // large-screen layouts (res/values-w900dp).
+            // If this view is present, then the
+            // activity should be in two-pane mode.
+            mTwoPane = true;
+        }
+
+        View recyclerView = findViewById(R.id.recipeitem_list);
+        assert recyclerView != null;
+        setupRecyclerView((RecyclerView) recyclerView);
+
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable("recipe", mRecipe);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        mRecipe = savedInstanceState.getParcelable("recipe");
+        super.onRestoreInstanceState(savedInstanceState);
     }
 
     @Override

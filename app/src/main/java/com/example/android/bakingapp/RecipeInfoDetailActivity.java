@@ -10,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.android.bakingapp.data.Recipe;
+
 /**
  * An activity representing a single RecipeItem detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -17,6 +19,8 @@ import android.view.View;
  * in a {@link RecipeItemListActivity}.
  */
 public class RecipeInfoDetailActivity extends AppCompatActivity {
+
+    private Recipe mRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,9 @@ public class RecipeInfoDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        if (getIntent().hasExtra("recipe"))
+            mRecipe = getIntent().getParcelableExtra("recipe");
+
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
         // (e.g. when rotating the screen from portrait to landscape).
@@ -53,8 +60,7 @@ public class RecipeInfoDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(RecipeInfoDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(RecipeInfoDetailFragment.ARG_ITEM_ID));
+            arguments.putParcelable("recipe", mRecipe);
             RecipeInfoDetailFragment fragment = new RecipeInfoDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -73,7 +79,8 @@ public class RecipeInfoDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, RecipeItemListActivity.class));
+            navigateUpTo(new Intent(this, RecipeItemListActivity.class)
+                    .putExtra("recipe", mRecipe));
             return true;
         }
         return super.onOptionsItemSelected(item);

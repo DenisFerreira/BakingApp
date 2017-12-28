@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
+import com.example.android.bakingapp.data.Recipe;
+
 /**
  * An activity representing a single RecipeItem detail screen. This
  * activity is only used on narrow width devices. On tablet-size devices,
@@ -17,6 +19,8 @@ import android.view.MenuItem;
  * in a {@link RecipeItemListActivity}.
  */
 public class RecipeItemDetailActivity extends AppCompatActivity {
+
+    private Recipe mRecipe;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +44,9 @@ public class RecipeItemDetailActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        if (getIntent().hasExtra("recipe"))
+            mRecipe = getIntent().getParcelableExtra("recipe");
+
         // savedInstanceState is non-null when there is fragment state
         // saved from previous configurations of this activity
         // (e.g. when rotating the screen from portrait to landscape).
@@ -53,8 +60,9 @@ public class RecipeItemDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putString(RecipeItemDetailFragment.ARG_ITEM_ID,
-                    getIntent().getStringExtra(RecipeItemDetailFragment.ARG_ITEM_ID));
+            arguments.putInt(RecipeItemDetailFragment.ARG_ITEM_ID,
+                    getIntent().getIntExtra(RecipeItemDetailFragment.ARG_ITEM_ID, 0));
+            arguments.putParcelable("recipe", mRecipe);
             RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
@@ -73,7 +81,8 @@ public class RecipeItemDetailActivity extends AppCompatActivity {
             //
             // http://developer.android.com/design/patterns/navigation.html#up-vs-back
             //
-            navigateUpTo(new Intent(this, RecipeItemListActivity.class));
+            navigateUpTo(new Intent(this, RecipeItemListActivity.class)
+                    .putExtra("recipe", mRecipe));
             return true;
         }
         return super.onOptionsItemSelected(item);
