@@ -6,4 +6,4 @@
     android:layout_height="match_parent"
     android:padding="16dp"
     android:textIsSelectable="true"
-    tools:context="com.example.android.bakingapp.RecipeItemDetailFragment" />
+    tools:context="com.example.android.bakingapp.UI.RecipeItemDetailFragment" />

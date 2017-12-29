@@ -4,4 +4,7 @@
     <string name="title_recipeitem_detail">RecipeItem Detail</string>
     <string name="recipe_ingredients">Recipe Ingredients</string>
     <string name="recipe_info">Recipe Information</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="configure">Configure</string>
 </resources>

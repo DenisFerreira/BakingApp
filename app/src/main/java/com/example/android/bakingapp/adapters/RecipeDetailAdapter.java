@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.RecipeItemDetailActivity;
-import com.example.android.bakingapp.RecipeItemDetailFragment;
-import com.example.android.bakingapp.RecipeItemListActivity;
+import com.example.android.bakingapp.UI.RecipeItemDetailActivity;
+import com.example.android.bakingapp.UI.RecipeItemDetailFragment;
+import com.example.android.bakingapp.UI.RecipeItemListActivity;
 import com.example.android.bakingapp.data.Recipe;
 import com.example.android.bakingapp.data.Step;
 
@@ -25,8 +25,8 @@ import butterknife.ButterKnife;
  * Created by lsitec205.ferreira on 27/12/17.
  */
 
-public class SimpleItemRecyclerViewAdapter
-        extends RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder> {
+public class RecipeDetailAdapter
+        extends RecyclerView.Adapter<RecipeDetailAdapter.ViewHolder> {
 
     private final RecipeItemListActivity mParentActivity;
     private final Recipe mRecipe;
@@ -34,9 +34,9 @@ public class SimpleItemRecyclerViewAdapter
     private final ListIterator<Step> mStepsIterator;
 
 
-    public SimpleItemRecyclerViewAdapter(RecipeItemListActivity parent,
-                                         Recipe recipe,
-                                         boolean twoPane) {
+    public RecipeDetailAdapter(RecipeItemListActivity parent,
+                               Recipe recipe,
+                               boolean twoPane) {
         mRecipe = recipe;
         mParentActivity = parent;
         mTwoPane = twoPane;
@@ -92,8 +92,7 @@ public class SimpleItemRecyclerViewAdapter
 
 
     class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.id_text)
-        TextView mIdView;
+        @BindView(R.id.id_text) TextView mIdView;
         @BindView(R.id.content) TextView mContentView;
 
         ViewHolder(View view) {

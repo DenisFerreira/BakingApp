@@ -1,9 +1,11 @@
-package com.example.android.bakingapp.utils;
+package com.example.android.bakingapp.loaders;
 
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.example.android.bakingapp.data.Recipe;
+import com.example.android.bakingapp.utils.JsonUtils;
+import com.example.android.bakingapp.utils.NetworkUtils;
 
 import org.json.JSONException;
 

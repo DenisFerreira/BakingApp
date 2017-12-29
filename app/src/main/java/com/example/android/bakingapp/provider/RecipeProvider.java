@@ -1,12 +1,23 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.net.Uri;
 
 public class RecipeProvider extends ContentProvider {
-    public RecipeProvider() {
+
+    private static final int CODE_RECIPE = 100;
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
+
+
+    public static UriMatcher buildUriMatcher(){
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
+        final String authority = RecipeContract.CONTENT_AUTHORITY;
+
+        matcher.addURI(authority, RecipeContract.PATH_RECIPE, CODE_RECIPE);
+        return matcher;
     }
 
     @Override
@@ -37,8 +48,18 @@ public class RecipeProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        // TODO: Implement this to handle query requests from clients.
-        throw new UnsupportedOperationException("Not yet implemented");
+        Cursor cursor;
+        switch (sUriMatcher.match(uri)){
+            case CODE_RECIPE:{
+                cursor = null;
+                break;
+            }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+
+        }
+        cursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return cursor;
     }
 
     @Override

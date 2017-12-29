@@ -1,9 +1,8 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.UI;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,15 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
 
-import com.example.android.bakingapp.adapters.SimpleItemRecyclerViewAdapter;
+import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.adapters.RecipeDetailAdapter;
 import com.example.android.bakingapp.data.Recipe;
 
 import static android.support.v4.app.NavUtils.navigateUpFromSameTask;
@@ -38,24 +35,22 @@ public class RecipeItemListActivity extends AppCompatActivity {
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
+    private static final String SAVED_LAYOUT_MANAGER = "saved_layout_manager";
+    private Parcelable layoutManagerSavedState;
     private boolean mTwoPane;
     private Recipe mRecipe;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipeitem_list);
         Intent intent = getIntent();
-        try {
-            if (intent.hasExtra("recipe"))
-                mRecipe = intent.getParcelableExtra("recipe");
-            if(savedInstanceState != null)
-                mRecipe = savedInstanceState.getParcelable("recipe");
-
-            if (mRecipe == null)
-                throw new Exception();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (savedInstanceState == null)
+            mRecipe = intent.getParcelableExtra("recipe");
+        else {
+            mRecipe = savedInstanceState.getParcelable("recipe");
+            layoutManagerSavedState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
         }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -85,15 +80,17 @@ public class RecipeItemListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
 
-        View recyclerView = findViewById(R.id.recipeitem_list);
-        assert recyclerView != null;
-        setupRecyclerView((RecyclerView) recyclerView);
+        mRecyclerView = findViewById(R.id.recipeitem_list);
+        assert mRecyclerView != null;
+        setupRecyclerView((RecyclerView) mRecyclerView);
 
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable("recipe", mRecipe);
+        layoutManagerSavedState = mRecyclerView.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(SAVED_LAYOUT_MANAGER, layoutManagerSavedState);
         super.onSaveInstanceState(outState);
     }
 
@@ -124,6 +121,8 @@ public class RecipeItemListActivity extends AppCompatActivity {
         GridLayoutManager layoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new SimpleItemRecyclerViewAdapter(this, mRecipe, mTwoPane));
+        recyclerView.setAdapter(new RecipeDetailAdapter(this, mRecipe, mTwoPane));
+        if (layoutManagerSavedState != null)
+            recyclerView.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
     }
 }

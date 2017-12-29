@@ -1,5 +1,6 @@
-package com.example.android.bakingapp;
+package com.example.android.bakingapp.UI;
 
+import android.os.Parcelable;
 import android.support.v4.content.Loader;
 import android.support.v4.app.LoaderManager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,36 +11,49 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.adapters.RecipeAdapter;
 import com.example.android.bakingapp.data.Recipe;
-import com.example.android.bakingapp.utils.RecipeLoader;
+import com.example.android.bakingapp.loaders.RecipeLoader;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecipeList extends AppCompatActivity implements LoaderManager.LoaderCallbacks{
+public class RecipeListActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks{
 
+    private static final String SAVED_LAYOUT_MANAGER = "saved_layout_manager";
     private static final int ID_LOADER_RECIPE = 25;
     @BindView(R.id.recipes_rc)
     RecyclerView mRecipesRc;
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mProgressBar;
     RecipeAdapter mRecipeAdapter;
+    private Parcelable layoutManagerSavedState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_list);
         ButterKnife.bind(this);
-        GridLayoutManager layoutManager = new GridLayoutManager(RecipeList.this, numberOfColumns());
+        GridLayoutManager layoutManager = new GridLayoutManager(RecipeListActivity.this, numberOfColumns());
         mRecipesRc.setLayoutManager(layoutManager);
         mRecipesRc.setHasFixedSize(true);
 
         mRecipeAdapter = new RecipeAdapter();
         mRecipesRc.setAdapter(mRecipeAdapter);
 
+        if(savedInstanceState != null )
+            layoutManagerSavedState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
+
         loadRecipesData();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        layoutManagerSavedState = mRecipesRc.getLayoutManager().onSaveInstanceState();
+        outState.putParcelable(SAVED_LAYOUT_MANAGER, layoutManagerSavedState);
+        super.onSaveInstanceState(outState);
     }
 
     private void loadRecipesData() {
@@ -56,6 +70,9 @@ public class RecipeList extends AppCompatActivity implements LoaderManager.Loade
         mProgressBar.setVisibility(View.INVISIBLE);
         mRecipesRc.setVisibility(View.VISIBLE);
         mRecipeAdapter.setData(data);
+        if (layoutManagerSavedState != null) {
+            mRecipesRc.getLayoutManager().onRestoreInstanceState(layoutManagerSavedState);
+        }
     }
     private int numberOfColumns() {
         DisplayMetrics displayMetrics = new DisplayMetrics();

@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.RecipeItemListActivity;
+import com.example.android.bakingapp.UI.RecipeItemListActivity;
 import com.example.android.bakingapp.data.Recipe;
 import com.squareup.picasso.Picasso;
 
@@ -49,6 +49,9 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.GridViewHo
             Picasso.with(mContext).load(recipe.getImage())
                 .placeholder(R.drawable.ic_placeholder)
                 .into(holder.mBannerImage);
+        else
+            holder.mBannerImage.setImageDrawable(mContext.getResources()
+                    .getDrawable(R.drawable.ic_no_image_recipe, null));
         holder.mBannerText.setText(recipe.getName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

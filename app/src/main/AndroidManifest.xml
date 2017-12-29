@@ -11,7 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".RecipeList">
+        <activity android:name=".UI.RecipeListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,28 +20,44 @@
         </activity>
 
         <provider
-            android:name=".RecipeProvider"
+            android:name=".provider.RecipeProvider"
             android:authorities="com.example.android.bakingapp"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name=".RecipeItemListActivity"
+            android:name=".UI.RecipeItemListActivity"
             android:label="@string/title_recipeitem_list"
-            android:parentActivityName=".RecipeList"
+            android:parentActivityName=".UI.RecipeListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.bakingapp.RecipeList" />
+                android:value="com.example.android.bakingapp.UI.RecipeListActivity" />
         </activity>
         <activity
-            android:name=".RecipeItemDetailActivity"
+            android:name=".UI.RecipeItemDetailActivity"
             android:label="@string/title_recipeitem_detail"
-            android:parentActivityName=".RecipeItemListActivity"
+            android:parentActivityName=".UI.RecipeItemListActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.android.bakingapp.RecipeItemListActivity" />
+                android:value="com.example.android.bakingapp.UI.RecipeItemListActivity" />
+        </activity>
+
+        <receiver android:name=".widgets.BakingAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/baking_app_widget_info" />
+        </receiver>
+
+        <activity android:name=".widgets.BakingAppWidgetConfigureActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
         </activity>
     </application>
 
