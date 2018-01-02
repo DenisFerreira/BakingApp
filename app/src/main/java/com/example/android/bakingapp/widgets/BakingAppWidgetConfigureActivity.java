@@ -5,11 +5,22 @@ import android.appwidget.AppWidgetManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 
 import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.data.Recipe;
+import com.example.android.bakingapp.provider.RecipeContract;
+
+import java.util.ArrayList;
 
 /**
  * The configuration screen for the {@link BakingAppWidget BakingAppWidget} AppWidget.
@@ -18,15 +29,23 @@ public class BakingAppWidgetConfigureActivity extends Activity {
 
     private static final String PREFS_NAME = "com.example.android.bakingapp.widgets.BakingAppWidget";
     private static final String PREF_PREFIX_KEY = "appwidget_";
+    private static final String PREF_ID = "_pref_id";
     int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
-    EditText mAppWidgetText;
+    Spinner mAppWidgetSpinner;
+    Button mButton;
+    private Cursor mRecipesData;
+
+
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
         public void onClick(View v) {
             final Context context = BakingAppWidgetConfigureActivity.this;
 
             // When the button is clicked, store the string locally
-            String widgetText = mAppWidgetText.getText().toString();
-            saveTitlePref(context, mAppWidgetId, widgetText);
+            mRecipesData.moveToPosition(mAppWidgetSpinner.getSelectedItemPosition());
+            int id = mRecipesData.getInt(mRecipesData.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_ID));
+            String title = mRecipesData.getString(mRecipesData.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_NAME));
+            saveTitlePref(context, mAppWidgetId, title);
+            saveRecipeIdPref(context, mAppWidgetId, id);
 
             // It is the responsibility of the configuration activity to update the app widget
             AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
@@ -78,8 +97,9 @@ public class BakingAppWidgetConfigureActivity extends Activity {
         setResult(RESULT_CANCELED);
 
         setContentView(R.layout.baking_app_widget_configure);
-        mAppWidgetText = (EditText) findViewById(R.id.appwidget_text);
-        findViewById(R.id.add_button).setOnClickListener(mOnClickListener);
+        mAppWidgetSpinner = (Spinner) findViewById(R.id.recipe_spinner);
+        mButton = (Button) findViewById(R.id.add_button);
+        mButton.setOnClickListener(mOnClickListener);
 
         // Find the widget id from the intent.
         Intent intent = getIntent();
@@ -95,7 +115,35 @@ public class BakingAppWidgetConfigureActivity extends Activity {
             return;
         }
 
-        mAppWidgetText.setText(loadTitlePref(BakingAppWidgetConfigureActivity.this, mAppWidgetId));
+        mRecipesData = getContentResolver().query(RecipeContract.RecipeEntry.CONTENT_URI,
+                new String[]{RecipeContract.RecipeEntry.COLUMN_ID, RecipeContract.RecipeEntry.COLUMN_NAME},
+                null,
+                null,
+                null);
+        ArrayList<String> recipesName = new ArrayList<>();
+        if (mRecipesData != null) {
+            mButton.setClickable(true);
+            while(mRecipesData.moveToNext()){
+                recipesName.add(mRecipesData.getString(
+                        mRecipesData.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_NAME)));
+            }
+        }
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, recipesName);
+        mAppWidgetSpinner.setAdapter(dataAdapter);
+
+    }
+
+    public static int loadRecipeId(Context context, int appWidgetId) {
+        SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
+        int recipeID = prefs.getInt(PREF_PREFIX_KEY + appWidgetId + PREF_ID, 0);
+        return recipeID;
+    }
+
+    static void saveRecipeIdPref(Context context, int appWidgetId, int recipeID) {
+        SharedPreferences.Editor prefs = context.getSharedPreferences(PREFS_NAME, 0).edit();
+        prefs.putInt(PREF_PREFIX_KEY + appWidgetId + PREF_ID, recipeID);
+        prefs.apply();
     }
 }
 

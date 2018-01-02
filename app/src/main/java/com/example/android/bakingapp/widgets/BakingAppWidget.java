@@ -3,9 +3,11 @@ package com.example.android.bakingapp.widgets;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.android.bakingapp.R;
+import com.example.android.bakingapp.provider.RecipeContract;
 
 /**
  * Implementation of App Widget functionality.
@@ -16,11 +18,15 @@ public class BakingAppWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        CharSequence widgetText = BakingAppWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
-        // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+        String title = BakingAppWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
+        int recipeID = BakingAppWidgetConfigureActivity.loadRecipeId(context, appWidgetId);
 
+        views.setTextViewText(R.id.appwidget_text, title);
+        Intent intent = new Intent(context, BakingAppWidgetService.class);
+        intent.putExtra("recipeID",
+                recipeID);
+        views.setRemoteAdapter(R.id.app_widget_list_view, intent);
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

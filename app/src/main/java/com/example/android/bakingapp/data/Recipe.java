@@ -1,16 +1,15 @@
 
 package com.example.android.bakingapp.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.os.Parcelable.Creator;
 
 public class Recipe implements Parcelable
 {
-
     private Integer id;
     private String name;
     private List<Ingredient> ingredients = null;
@@ -144,9 +143,7 @@ public class Recipe implements Parcelable
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeValue(id);
         dest.writeValue(name);
-        //dest.writeList(ingredients);
         dest.writeTypedList(ingredients);
-        //dest.writeList(steps);
         dest.writeTypedList(steps);
         dest.writeValue(servings);
         dest.writeValue(image);
@@ -158,3 +155,4 @@ public class Recipe implements Parcelable
     }
 
 }
+
