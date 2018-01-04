@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.provider.RecipeContract;
 
 /**
  * Implementation of App Widget functionality.
@@ -16,16 +15,20 @@ import com.example.android.bakingapp.provider.RecipeContract;
  */
 public class BakingAppWidget extends AppWidgetProvider {
 
+    static public String RECIPE_ID_EXTRA = "com.example.android.bakingapp.widget.recipeID";
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.baking_app_widget);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_ingredients);
         String title = BakingAppWidgetConfigureActivity.loadTitlePref(context, appWidgetId);
         int recipeID = BakingAppWidgetConfigureActivity.loadRecipeId(context, appWidgetId);
 
-        views.setTextViewText(R.id.appwidget_text, title);
+        String widgetTitle = title + " " +
+                context.getResources().getString(R.string.ingredient_list);
+
+        views.setTextViewText(R.id.appwidget_text, widgetTitle);
         Intent intent = new Intent(context, BakingAppWidgetService.class);
-        intent.putExtra("recipeID",
+        intent.putExtra(RECIPE_ID_EXTRA,
                 recipeID);
         views.setRemoteAdapter(R.id.app_widget_list_view, intent);
 

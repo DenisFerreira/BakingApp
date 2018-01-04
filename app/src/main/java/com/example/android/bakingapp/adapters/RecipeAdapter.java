@@ -35,7 +35,7 @@ public class RecipeAdapter extends RecyclerView.Adapter<RecipeAdapter.GridViewHo
     @Override
     public GridViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
-        int layoutIdForListItem = R.layout.banner_recipe_list;
+        int layoutIdForListItem = R.layout.main_recipe_list;
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         View view = inflater.inflate(layoutIdForListItem, parent, false);

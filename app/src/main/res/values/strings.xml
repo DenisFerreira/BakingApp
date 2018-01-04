@@ -8,4 +8,8 @@
     <string name="add_widget">Add widget</string>
     <string name="select_recipe">Select Recipe:</string>
     <string name="list_item_ingredient">ingredient item</string>
+    <string name="ingredient_list">Ingredient list</string>
+    <string name="ingredients_label">Ingredients: </string>
+    <string name="servings_label">Servings:</string>
+    <string name="portions_label">portions</string>
 </resources>

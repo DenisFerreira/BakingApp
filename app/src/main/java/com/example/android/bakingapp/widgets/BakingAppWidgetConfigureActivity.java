@@ -6,18 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 
 import com.example.android.bakingapp.R;
-import com.example.android.bakingapp.data.Recipe;
 import com.example.android.bakingapp.provider.RecipeContract;
 
 import java.util.ArrayList;
@@ -96,9 +91,9 @@ public class BakingAppWidgetConfigureActivity extends Activity {
         // out of the widget placement if the user presses the back button.
         setResult(RESULT_CANCELED);
 
-        setContentView(R.layout.baking_app_widget_configure);
-        mAppWidgetSpinner = (Spinner) findViewById(R.id.recipe_spinner);
-        mButton = (Button) findViewById(R.id.add_button);
+        setContentView(R.layout.widget_ingredients_configure);
+        mAppWidgetSpinner = findViewById(R.id.recipe_spinner);
+        mButton = findViewById(R.id.add_button);
         mButton.setOnClickListener(mOnClickListener);
 
         // Find the widget id from the intent.
@@ -128,7 +123,7 @@ public class BakingAppWidgetConfigureActivity extends Activity {
                         mRecipesData.getColumnIndex(RecipeContract.RecipeEntry.COLUMN_NAME)));
             }
         }
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_dropdown_item, recipesName);
         mAppWidgetSpinner.setAdapter(dataAdapter);
 
@@ -136,8 +131,7 @@ public class BakingAppWidgetConfigureActivity extends Activity {
 
     public static int loadRecipeId(Context context, int appWidgetId) {
         SharedPreferences prefs = context.getSharedPreferences(PREFS_NAME, 0);
-        int recipeID = prefs.getInt(PREF_PREFIX_KEY + appWidgetId + PREF_ID, 0);
-        return recipeID;
+        return prefs.getInt(PREF_PREFIX_KEY + appWidgetId + PREF_ID, 0);
     }
 
     static void saveRecipeIdPref(Context context, int appWidgetId, int recipeID) {

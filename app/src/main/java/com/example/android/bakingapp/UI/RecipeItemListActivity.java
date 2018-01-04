@@ -36,6 +36,7 @@ public class RecipeItemListActivity extends AppCompatActivity {
      * device.
      */
     private static final String SAVED_LAYOUT_MANAGER = "saved_layout_manager";
+    private static final String SAVED_RECIPE_EXTRA = "recipe";
     private Parcelable layoutManagerSavedState;
     private boolean mTwoPane;
     private Recipe mRecipe;
@@ -47,9 +48,9 @@ public class RecipeItemListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_recipeitem_list);
         Intent intent = getIntent();
         if (savedInstanceState == null)
-            mRecipe = intent.getParcelableExtra("recipe");
+            mRecipe = intent.getParcelableExtra(SAVED_RECIPE_EXTRA);
         else {
-            mRecipe = savedInstanceState.getParcelable("recipe");
+            mRecipe = savedInstanceState.getParcelable(SAVED_RECIPE_EXTRA);
             layoutManagerSavedState = savedInstanceState.getParcelable(SAVED_LAYOUT_MANAGER);
         }
 
@@ -88,7 +89,7 @@ public class RecipeItemListActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable("recipe", mRecipe);
+        outState.putParcelable(SAVED_RECIPE_EXTRA, mRecipe);
         layoutManagerSavedState = mRecyclerView.getLayoutManager().onSaveInstanceState();
         outState.putParcelable(SAVED_LAYOUT_MANAGER, layoutManagerSavedState);
         super.onSaveInstanceState(outState);
@@ -96,7 +97,7 @@ public class RecipeItemListActivity extends AppCompatActivity {
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        mRecipe = savedInstanceState.getParcelable("recipe");
+        mRecipe = savedInstanceState.getParcelable(SAVED_RECIPE_EXTRA);
         super.onRestoreInstanceState(savedInstanceState);
     }
 

@@ -11,15 +11,7 @@ import android.widget.RemoteViewsService;
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.provider.RecipeContract;
 
-
-/**
- * Created by lsitec205.ferreira on 29/12/17.
- */
-
 public class BakingAppWidgetService extends RemoteViewsService {
-
-    public static final String ACTION_CLICK_RECIPE = "com.example.android.bakingapp.action.click_recipe";
-    private Intent mIntent;
 
     private class MyRemoteViewFactory implements RemoteViewsFactory {
 
@@ -27,7 +19,7 @@ public class BakingAppWidgetService extends RemoteViewsService {
         private Context mContext;
         private Intent mIntent;
 
-        public MyRemoteViewFactory(Context context, Intent intent) {
+        private MyRemoteViewFactory(Context context, Intent intent) {
             mContext = context;
             mIntent = intent;
         }
@@ -41,8 +33,8 @@ public class BakingAppWidgetService extends RemoteViewsService {
             if (data != null)
                 data.close();
             int recipeID = 0;
-            if(mIntent.hasExtra("recipeID")) {
-                 recipeID = mIntent.getIntExtra("recipeID", 0);
+            if(mIntent.hasExtra(BakingAppWidget.RECIPE_ID_EXTRA)) {
+                 recipeID = mIntent.getIntExtra(BakingAppWidget.RECIPE_ID_EXTRA, 0);
             }
             String[] args = {String.valueOf(recipeID)};
             data = getContentResolver().query(RecipeContract.RecipeIngredientEntry.CONTENT_URI,
@@ -69,7 +61,7 @@ public class BakingAppWidgetService extends RemoteViewsService {
         @Override
         public RemoteViews getViewAt(int i) {
             RemoteViews views;
-            views = new RemoteViews(mContext.getPackageName(), R.layout.baking_app_widget_item_list);
+            views = new RemoteViews(mContext.getPackageName(), R.layout.widget_ingredients_list);
             if (i == AdapterView.INVALID_POSITION || data == null || !data.moveToPosition(i))
                 return views;
             String result =
@@ -118,7 +110,6 @@ public class BakingAppWidgetService extends RemoteViewsService {
 
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent) {
-        mIntent = intent;
         return new MyRemoteViewFactory(this.getApplicationContext(), intent);
     }
 

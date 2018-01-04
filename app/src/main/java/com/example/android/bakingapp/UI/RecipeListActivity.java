@@ -34,7 +34,7 @@ public class RecipeListActivity extends AppCompatActivity implements LoaderManag
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_recipe_list);
+        setContentView(R.layout.main_search_recipe);
         ButterKnife.bind(this);
         GridLayoutManager layoutManager = new GridLayoutManager(RecipeListActivity.this, numberOfColumns());
         mRecipesRc.setLayoutManager(layoutManager);
