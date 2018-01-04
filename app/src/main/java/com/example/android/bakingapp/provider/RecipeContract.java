@@ -35,5 +35,7 @@ public class RecipeContract {
         public static final String COLUMN_QUANTITY = "quantity";
         public static final String COLUMN_MEASURE = "measure";
         public static final String COLUMN_INGREDIENT = "ingredient";
+        public static final String COLUMN_CHECK = "checkIngredient";
+
     }
 }

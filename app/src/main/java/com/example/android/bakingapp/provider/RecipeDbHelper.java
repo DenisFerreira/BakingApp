@@ -30,6 +30,7 @@ public class RecipeDbHelper extends SQLiteOpenHelper {
                 RecipeContract.RecipeIngredientEntry.COLUMN_RECIPE_ID + " TEXT, " +
                 RecipeContract.RecipeIngredientEntry.COLUMN_INGREDIENT + " TEXT, " +
                 RecipeContract.RecipeIngredientEntry.COLUMN_MEASURE + " TEXT, " +
+                RecipeContract.RecipeIngredientEntry.COLUMN_CHECK + " INTEGER NOT NULL DEFAULT 0, " +
                 RecipeContract.RecipeIngredientEntry.COLUMN_QUANTITY + " TEXT);";
         db.execSQL(CREATE_INGREDIENT_TABLE);
     }

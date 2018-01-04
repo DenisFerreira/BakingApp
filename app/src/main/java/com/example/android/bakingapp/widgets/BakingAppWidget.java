@@ -1,5 +1,6 @@
 package com.example.android.bakingapp.widgets;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -27,6 +28,11 @@ public class BakingAppWidget extends AppWidgetProvider {
         intent.putExtra("recipeID",
                 recipeID);
         views.setRemoteAdapter(R.id.app_widget_list_view, intent);
+
+        Intent appIntent = new Intent(context, CheckItemService.class);
+        PendingIntent appPendingIntent = PendingIntent.getService(context, 0, appIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setPendingIntentTemplate(R.id.app_widget_list_view, appPendingIntent);
+
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

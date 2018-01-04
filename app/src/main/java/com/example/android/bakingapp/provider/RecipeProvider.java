@@ -120,7 +120,25 @@ public class RecipeProvider extends ContentProvider {
 
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        throw new UnsupportedOperationException("Not yet implemented");
+        final SQLiteDatabase db = dbHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+        int qt;
+
+        switch (match) {
+            case RECIPES:
+                qt = db.update(RecipeContract.RecipeEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            case INGREDIENTS:
+                qt = db.update(RecipeContract.RecipeIngredientEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+
+        if (qt != 0)
+            getContext().getContentResolver().notifyChange(uri, null);
+
+        return qt;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.example.android.bakingapp.widgets;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.os.Bundle;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
@@ -77,6 +78,20 @@ public class BakingAppWidgetService extends RemoteViewsService {
                     data.getString(data.getColumnIndex(RecipeContract.RecipeIngredientEntry.COLUMN_MEASURE));
 
             views.setTextViewText(R.id.appwidget_list_item_text, result);
+            int checkedItem = data.getInt(data.getColumnIndex(RecipeContract.RecipeIngredientEntry.COLUMN_CHECK));
+            if(checkedItem > 0)
+                views.setImageViewResource(R.id.appwidget_list_item_button, R.drawable.ic_check_box_black_24dp);
+            else
+                views.setImageViewResource(R.id.appwidget_list_item_button, R.drawable.ic_check_box_outline_blank_black_24dp);
+
+            Bundle extras = new Bundle();
+            String itemID = data.getString(data.getColumnIndex(RecipeContract.RecipeIngredientEntry.COLUMN_ID));
+            extras.putString(RecipeContract.RecipeIngredientEntry.COLUMN_ID, itemID);
+            extras.putInt(RecipeContract.RecipeIngredientEntry.COLUMN_CHECK, checkedItem);
+            Intent fillInIntent = new Intent();
+            fillInIntent.putExtras(extras);
+            views.setOnClickFillInIntent(R.id.appwidget_list_item_button, fillInIntent);
+
             return views;
         }
 
