@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.support.v7.app.AppCompatActivity;
@@ -48,7 +49,7 @@ public class RecipeItemDetailActivity extends AppCompatActivity {
 
         if (getIntent().hasExtra("recipe")) {
             mRecipe = getIntent().getParcelableExtra("recipe");
-            mItemID = getIntent().getIntExtra(RecipeItemDetailFragment.ARG_ITEM_ID, 0);
+            mItemID = getIntent().getIntExtra(RecipeInfoFragment.ARG_ITEM_ID, 0);
         }
 
         // savedInstanceState is non-null when there is fragment state
@@ -64,9 +65,13 @@ public class RecipeItemDetailActivity extends AppCompatActivity {
             // Create the detail fragment and add it to the activity
             // using a fragment transaction.
             Bundle arguments = new Bundle();
-            arguments.putInt(RecipeItemDetailFragment.ARG_ITEM_ID, mItemID);
+            arguments.putInt(RecipeInfoFragment.ARG_ITEM_ID, mItemID);
             arguments.putParcelable("recipe", mRecipe);
-            RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
+            Fragment fragment;
+            if(mItemID == 0)
+                fragment = new RecipeInfoFragment();
+            else
+                fragment = new RecipeStepFragment();
             fragment.setArguments(arguments);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.recipeitem_detail_container, fragment)

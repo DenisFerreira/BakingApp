@@ -12,4 +12,6 @@
     <string name="ingredients_label">Ingredients: </string>
     <string name="servings_label">Servings:</string>
     <string name="portions_label">portions</string>
+    <string name="previous_step">previous</string>
+    <string name="next_step">next</string>
 </resources>

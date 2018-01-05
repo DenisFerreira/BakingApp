@@ -3,6 +3,7 @@ package com.example.android.bakingapp.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,9 @@ import android.widget.TextView;
 
 import com.example.android.bakingapp.R;
 import com.example.android.bakingapp.UI.RecipeItemDetailActivity;
-import com.example.android.bakingapp.UI.RecipeItemDetailFragment;
+import com.example.android.bakingapp.UI.RecipeInfoFragment;
 import com.example.android.bakingapp.UI.RecipeItemListActivity;
+import com.example.android.bakingapp.UI.RecipeStepFragment;
 import com.example.android.bakingapp.data.Recipe;
 import com.example.android.bakingapp.data.Step;
 
@@ -65,9 +67,13 @@ public class RecipeDetailAdapter
             @Override
             public void onClick(View view) {
                 if (mTwoPane) {
-                    RecipeItemDetailFragment fragment = new RecipeItemDetailFragment();
+                    Fragment fragment;
                     Bundle arguments = new Bundle();
-                    arguments.putInt(RecipeItemDetailFragment.ARG_ITEM_ID, position);
+                    if(position == 0)
+                        fragment = new RecipeInfoFragment();
+                    else
+                        fragment = new RecipeStepFragment();
+                    arguments.putInt(RecipeInfoFragment.ARG_ITEM_ID, position);
                     arguments.putParcelable("recipe", mRecipe);
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
@@ -77,7 +83,7 @@ public class RecipeDetailAdapter
                     Context context = view.getContext();
                     Intent intent = new Intent(context, RecipeItemDetailActivity.class);
                     intent.putExtra("recipe", mRecipe);
-                    intent.putExtra(RecipeItemDetailFragment.ARG_ITEM_ID, position);
+                    intent.putExtra(RecipeInfoFragment.ARG_ITEM_ID, position);
                     context.startActivity(intent);
                 }
             }
