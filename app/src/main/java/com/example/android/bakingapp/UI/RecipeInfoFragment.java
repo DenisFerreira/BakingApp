@@ -36,6 +36,7 @@ public class RecipeInfoFragment extends Fragment {
      * represents.
      */
     public static final String ARG_ITEM_ID = "item_id";
+    public static final String ARG_TWO_PANEL = "mTwoPaneExtra";
     private Recipe mRecipe;
     @BindView(R.id.recipe_info_image) ImageView mInfoImageView;
     @BindView(R.id.recipe_info_name) TextView mInfoName;

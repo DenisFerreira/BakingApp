@@ -75,6 +75,7 @@ public class RecipeDetailAdapter
                         fragment = new RecipeStepFragment();
                     arguments.putInt(RecipeInfoFragment.ARG_ITEM_ID, position);
                     arguments.putParcelable("recipe", mRecipe);
+                    arguments.putBoolean(RecipeInfoFragment.ARG_TWO_PANEL, mTwoPane);
                     fragment.setArguments(arguments);
                     mParentActivity.getSupportFragmentManager().beginTransaction()
                             .replace(R.id.recipeitem_detail_container, fragment)
@@ -84,6 +85,7 @@ public class RecipeDetailAdapter
                     Intent intent = new Intent(context, RecipeItemDetailActivity.class);
                     intent.putExtra("recipe", mRecipe);
                     intent.putExtra(RecipeInfoFragment.ARG_ITEM_ID, position);
+                    intent.putExtra(RecipeInfoFragment.ARG_TWO_PANEL, mTwoPane);
                     context.startActivity(intent);
                 }
             }

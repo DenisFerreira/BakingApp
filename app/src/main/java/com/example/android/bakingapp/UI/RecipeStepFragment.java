@@ -57,6 +57,7 @@ public class RecipeStepFragment extends Fragment {
      */
     public static final String ARG_ITEM_ID = "item_id";
     public static final String KEY_RECIPE_ID = "recipe";
+    public static final String ARG_TWO_PANEL = "mTwoPaneExtra";
     private Recipe mRecipe;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mExoPlayerView;
@@ -73,6 +74,7 @@ public class RecipeStepFragment extends Fragment {
     @BindView(R.id.btn_next_step) Button nextStepButton;
     @BindView(R.id.tv_no_video_available) TextView noVideoAvailableTextView;
     @BindView(R.id.tv_step_description) TextView stepDescriptionTextView;
+    private boolean mTwoPane;
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -92,9 +94,11 @@ public class RecipeStepFragment extends Fragment {
             mStepListIndex = savedInstanceState.getInt(ARG_ITEM_ID);
             mRecipe = savedInstanceState.getParcelable(KEY_RECIPE_ID);
             mVideoPosition = savedInstanceState.getLong(KEY_VIDEO_POSITION_BUNDLE);
+            mTwoPane = savedInstanceState.getBoolean(ARG_TWO_PANEL);
         } else {
             mStepListIndex = getArguments().getInt(ARG_ITEM_ID);
             mRecipe = getArguments().getParcelable(KEY_RECIPE_ID);
+            mTwoPane = getArguments().getBoolean(ARG_TWO_PANEL);
         }
         if(mRecipe != null) {
             Activity activity = this.getActivity();
@@ -117,7 +121,7 @@ public class RecipeStepFragment extends Fragment {
 
         final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) mExoPlayerView.getLayoutParams();
 
-        mFullScreenDialog = new Dialog(getContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
+        mFullScreenDialog = new Dialog(getContext(), android.R.style.Theme_Material_Light_NoActionBar_Fullscreen) {
             public void onBackPressed() {
                 ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
                 mExoPlayerView.setLayoutParams(params);
@@ -156,8 +160,13 @@ public class RecipeStepFragment extends Fragment {
                 noVideoAvailableTextView.setVisibility(View.VISIBLE);
                 noVideoAvailableTextView.setGravity(Gravity.CENTER);
             }
-            if (!isFullscreen) {
-
+            previousStepButton.setVisibility(View.INVISIBLE);
+            nextStepButton.setVisibility(View.INVISIBLE);
+            if(!mTwoPane ){
+                nextStepButton.setVisibility(View.VISIBLE);
+                previousStepButton.setVisibility(View.VISIBLE);
+            }
+            if (!mTwoPane || !isFullscreen) {
                 previousStepButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -176,7 +185,6 @@ public class RecipeStepFragment extends Fragment {
                         }
                     }
                 });
-
                 nextStepButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
