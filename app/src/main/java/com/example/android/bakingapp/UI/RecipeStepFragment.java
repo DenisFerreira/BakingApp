@@ -178,7 +178,6 @@ public class RecipeStepFragment extends Fragment {
                             recipeStepDetailFragment.setArguments(bundle);
                             getActivity().getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.recipeitem_detail_container, recipeStepDetailFragment)
-                                    .addToBackStack(null)
                                     .commit();
                         } else {
                             Toast.makeText(getActivity(), "You're already on the first step.", Toast.LENGTH_SHORT).show();
@@ -196,7 +195,6 @@ public class RecipeStepFragment extends Fragment {
                             recipeStepDetailFragment.setArguments(bundle);
                             getActivity().getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.recipeitem_detail_container, recipeStepDetailFragment)
-                                    .addToBackStack(null)
                                     .commit();
                         } else {
                             Toast.makeText(getActivity(), "You're already on the last step.", Toast.LENGTH_SHORT).show();
@@ -223,7 +221,7 @@ public class RecipeStepFragment extends Fragment {
             ExtractorsFactory extractorsFactory = new DefaultExtractorsFactory();
             MediaSource videoSource = new ExtractorMediaSource(videoUri,
                     dataSourceFactory, extractorsFactory, null, null);
-            if (isFullscreen) {
+            if (isFullscreen && !mTwoPane) {
                 ((ViewGroup) mExoPlayerView.getParent()).removeView(mExoPlayerView);
                 mFullScreenDialog.addContentView(mExoPlayerView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                 mFullScreenDialog.show();
