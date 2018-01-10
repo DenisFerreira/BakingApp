@@ -95,7 +95,7 @@ public class RecipeDetailAdapter
     @Override
     public int getItemCount() {
         if (mRecipe == null)return 0;
-        return mRecipe.getIngredients().size() +1;
+        return mRecipe.getSteps().size() + 1;
     }
 
 

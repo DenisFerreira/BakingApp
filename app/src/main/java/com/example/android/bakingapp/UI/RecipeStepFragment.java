@@ -58,11 +58,13 @@ public class RecipeStepFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
     public static final String KEY_RECIPE_ID = "recipe";
     public static final String ARG_TWO_PANEL = "mTwoPaneExtra";
+    private static final String KEY_PLAY_WHEN_READY = "play_when_ready_key";
     private Recipe mRecipe;
     private SimpleExoPlayer mExoPlayer;
     private SimpleExoPlayerView mExoPlayerView;
     private Dialog mFullScreenDialog;
     private long mVideoPosition;
+    private boolean playWhenReady;
     private boolean isFullscreen;
     private View mRootView;
     private String mVideoURL;
@@ -94,11 +96,13 @@ public class RecipeStepFragment extends Fragment {
             mStepListIndex = savedInstanceState.getInt(ARG_ITEM_ID);
             mRecipe = savedInstanceState.getParcelable(KEY_RECIPE_ID);
             mVideoPosition = savedInstanceState.getLong(KEY_VIDEO_POSITION_BUNDLE);
+            playWhenReady = savedInstanceState.getBoolean(KEY_PLAY_WHEN_READY);
             mTwoPane = savedInstanceState.getBoolean(ARG_TWO_PANEL);
         } else {
             mStepListIndex = getArguments().getInt(ARG_ITEM_ID);
             mRecipe = getArguments().getParcelable(KEY_RECIPE_ID);
             mTwoPane = getArguments().getBoolean(ARG_TWO_PANEL);
+            playWhenReady = true;
         }
         if(mRecipe != null) {
             Activity activity = this.getActivity();
@@ -170,7 +174,7 @@ public class RecipeStepFragment extends Fragment {
                 previousStepButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (mStepListIndex > 0) {
+                        if (mStepListIndex > 1) {
                             Bundle bundle = new Bundle();
                             bundle.putParcelable(KEY_RECIPE_ID, mRecipe);
                             bundle.putInt(ARG_ITEM_ID, mStepListIndex - 1);
@@ -187,7 +191,7 @@ public class RecipeStepFragment extends Fragment {
                 nextStepButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (mStepListIndex < mRecipe.getSteps().size() - 1) {
+                        if (mStepListIndex < mRecipe.getSteps().size()) {
                             Bundle bundle = new Bundle();
                             bundle.putParcelable(KEY_RECIPE_ID, mRecipe);
                             bundle.putInt(ARG_ITEM_ID, mStepListIndex + 1);
@@ -228,7 +232,7 @@ public class RecipeStepFragment extends Fragment {
             }
             mExoPlayer.seekTo(mVideoPosition);
             mExoPlayer.prepare(videoSource);
-            mExoPlayer.setPlayWhenReady(true);
+            mExoPlayer.setPlayWhenReady(playWhenReady);
             mExoPlayerView.hideController();
         }
     }
@@ -245,8 +249,10 @@ public class RecipeStepFragment extends Fragment {
             outState.putParcelable(KEY_RECIPE_ID, mRecipe);
             outState.putInt(ARG_ITEM_ID, mStepListIndex);
         }
-        if(mExoPlayer!=null)
-            outState.putLong(KEY_VIDEO_POSITION_BUNDLE,mExoPlayer.getCurrentPosition());
+        if(mExoPlayer!=null) {
+            outState.putLong(KEY_VIDEO_POSITION_BUNDLE, mExoPlayer.getCurrentPosition());
+            outState.putBoolean(KEY_PLAY_WHEN_READY, mExoPlayer.getPlayWhenReady());
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -265,6 +271,7 @@ public class RecipeStepFragment extends Fragment {
         if (mExoPlayer != null) {
             mExoPlayer.stop();
             mExoPlayer.release();
+            mExoPlayer = null;
         }
     }
 
